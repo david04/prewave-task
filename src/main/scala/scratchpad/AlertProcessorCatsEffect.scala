@@ -5,6 +5,7 @@ import cats.implicits.catsSyntaxTuple2Parallel
 import com.typesafe.config.ConfigFactory
 
 import java.io.{BufferedWriter, FileWriter}
+import scala.util.Try
 
 object AlertProcessorCatsEffect {
 
@@ -21,7 +22,7 @@ object AlertProcessorCatsEffect {
   val queryServicesIO: IO[ServicesResponse] = {
     import sttp.client3.*
 
-    val key: String = Option(config.getString("key")).getOrElse(throw new Exception(
+    val key: String = Try(config.getString("key")).getOrElse(throw new Exception(
       "Please add a file 'application.conf' to resources folder with a single line 'key=\"XXXXX\"'"
     ))
     val queryTermsUrl = uri"https://services.prewave.ai/adminInterface/api/testQueryTerm?key=${key}"
